@@ -2,7 +2,6 @@ import React from 'react'
 import "./PrintCardResult.css"
 
 export default function PrintCardResult(props){
-    console.log(props)
     var printOutArray = (suit) => {
         return props[suit].map((card, i) => {
             return(
