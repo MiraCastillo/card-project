@@ -2,10 +2,14 @@ import React from 'react'
 import "./PrintCardResult.css"
 
 export default function PrintCardResult(props){
+    console.log(props)
     var printOutArray = (suit) => {
         return props[suit].map((card, i) => {
             return(
-                <p key={i}>{card}</p>
+                <div key={i}>
+                    <img src={card.image} alt="Card"/>
+                    <p>{typeof card.value === "string" ? card.value.toLowerCase() : card.value}</p>
+                </div>
             )
         })
     }
@@ -26,11 +30,13 @@ export default function PrintCardResult(props){
                     {printOutArray("HEARTS")} 
                 </div>
                 <div>
-                    <h4>Spades: </h4>
+                    <h4>Diamonds: </h4>
                     {printOutArray("DIAMONDS")} 
                 </div>
             </div>
-            <button onClick={() => props.drawAgain()}>Draw Again</button>
+            <button onClick={() => props.drawAgain()}>
+                <h4>Draw Again</h4>
+            </button>
         </div>
     )
 }

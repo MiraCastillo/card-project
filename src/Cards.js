@@ -44,26 +44,42 @@ export default class Cards extends Component{
                     let newArr = [...this.state[suitsArr[i]].num]
                     // Sort the copy of the array (this will just be the numbers in the suit)
                     newArr.sort((a, b) => {
-                        return a - b
+                        return a.value - b.value
                     })
                     // Now put the face cards in the correct positions in the now sorted numbers array
-                    // Ace at the beginning
-                    if(this.state[suitsArr[i]].face.includes("ACE")){
-                        newArr.unshift("ACE")
+                    // First we make a copy of the array on state we want to alter
+                    let orderedFaceArr = [...this.state[suitsArr[i]].face]
+                    // Now we sort it alphabetically. If the array had all the face cards, it would sort: ace, jack, king, queen
+                    orderedFaceArr.sort((a, b) => {
+                        if(a.value < b.value){
+                            return -1
+                        }
+                        if(a.value > b.value){
+                            return 1
+                        }
+                        return 0
+                    })
+                    // If the first value in the sorted array is an ace, it goes straight on the front of the ordered array containing the numbers, and then we take if off the array we are currently altering
+                    if(orderedFaceArr[0].value === "ACE"){
+                        let card = orderedFaceArr.shift()
+                        newArr.unshift(card)
                     }
-                    // Jack is pushed on to the back first
-                    if(this.state[suitsArr[i]].face.includes("JACK")){
-                        newArr.push("JACK")
+                    // If the first value now or to start with in the sorted face cards array is a jack, that goes straight on the end of the ordered numbers array, and is taken off the array we are currently altering
+                    if(orderedFaceArr[0].value === "JACK"){
+                        newArr.push(orderedFaceArr[0])
+                        orderedFaceArr.shift()
                     }
-                    // The queen will always be in the face array, so push that on to the back next
-                    newArr.push("QUEEN")
-                    // The king is pushed on last
-                    if(this.state[suitsArr[i]].face.includes("KING")){
-                        newArr.push("KING")
+                    // If the first value now or to start with in the sorted face cards array is a king, we put the queen on the sorted numbers array first (because we know there will always be a queen), and then put the king on the end
+                    if(orderedFaceArr[0].value === "KING"){
+                        newArr.push(orderedFaceArr[1])
+                        newArr.push(orderedFaceArr[0])
+                        // If the first value now or to start with in the sorted face cards is array is actually a queen, then there is no king, so we just put the queen on the back of the sorted numbers array
+                    } else if(orderedFaceArr[0].value === "QUEEN"){
+                        newArr.push(orderedFaceArr[0])
                     }
                     // Now we set state with this updated array, so it can be displayed correctly
                     this.setState((prevState) => {
-                        return {[suitsArr[i]]: {...prevState[suitsArr[i]], result: newArr}}
+                        return {[suitsArr[i]]: {...prevState[suitsArr[i]], result: [...newArr]}}
                     })
                 }
             })()
@@ -77,16 +93,16 @@ export default class Cards extends Component{
             // If the card value is a number, add it to the num array on the suit object
             if(+card.value){
                 this.setState(prevState => {
-                    // copy the value of the suits num array and add the new card value to it
-                    let newNumArr = [...prevState[card.suit].num, card.value]
+                    // Copy the value of the suits num array and add the new card value to it
+                    let newNumArr = [...prevState[card.suit].num, card]
                     // Reassign the suit on state to be the copied version of what's already on state, but set the num property to the new array we built above
                     return {[card.suit]: {...prevState[card.suit], num: newNumArr}}
                 })
                 // If the card value is a Jack, Queen, King or Ace, put it on the face array on the suit object
             } else {
                 this.setState(prevState => {
-                    let newFaceArr = [...prevState[card.suit].face, card.value]
-                    return{[card.suit] : {...prevState[card.suit], face: newFaceArr}}
+                    let newFaceArr = [...prevState[card.suit].face, card]
+                    return{[card.suit]: {...prevState[card.suit], face: newFaceArr}}
                 })
             }
             // If the card is a queen, add one to the queen counter, which is how we keep track of when to stop running the requests

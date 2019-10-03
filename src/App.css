@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Old+Standard+TT&display=swap');
+
 .App {
   text-align: center;
+  font-family: 'Old Standard TT', serif;
+  color: white;
 }
 
 .App-logo {

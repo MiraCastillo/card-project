@@ -3,7 +3,7 @@ import "./PrintCardResult.css"
 
 export default function DrawingCards(props){
     return(
-        <div className="card-results">
+        <div className="card-results drawing-cards">
             <h1>Drawing...</h1>
             <div>
                 <p>We have drawn:</p>
