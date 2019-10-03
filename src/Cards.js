@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import axios from "axios"
 import PrintCardResult from './PrintCardResult';
 import DrawingCards from './DrawingCards';
+import "./Cards.css"
 
 export default class Cards extends Component{
     constructor(){
@@ -18,6 +19,10 @@ export default class Cards extends Component{
     // STYLE
 
     componentDidMount(){
+        this.getAndSortCards()
+    }
+
+    getAndSortCards(){
         // Get the deck of cards shuffled, and draw the first two
         axios.get("https://deckofcardsapi.com/api/deck/new/draw/?count=2").then(res => {
             // Set the deck id for subsequent requests
@@ -106,11 +111,22 @@ export default class Cards extends Component{
         }, 1000))
     }
 
-    
-    
+    drawAgain(){
+        this.setState({
+            SPADES: {num: [], face: [], result: []},
+            HEARTS: {num: [], face: [], result: []},
+            CLUBS: {num: [], face: [], result: []},
+            DIAMONDS: {num: [], face: [], result: []},
+            Queens: 0,
+            deckId: null
+        })
+        this.getAndSortCards()
+    }
+
+
     render(){
         return(
-            <div>
+            <div className="card-container">
                 {this.state.Queens < 4 ? 
                 <DrawingCards 
                     SPADES={this.state.SPADES}
@@ -124,6 +140,7 @@ export default class Cards extends Component{
                     CLUBS={this.state.CLUBS.result}
                     HEARTS={this.state.HEARTS.result}
                     DIAMONDS={this.state.DIAMONDS.result}
+                    drawAgain={() => this.drawAgain()}
                 />}
             </div>
         )
